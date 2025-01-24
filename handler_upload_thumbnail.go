@@ -40,6 +40,7 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 	const maxMemory int64 = 10 << 20
 
 	r.ParseMultipartForm(maxMemory)
+
 	file, fileheader, err := r.FormFile("thumbnail")
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "error1", err)
@@ -59,6 +60,8 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 		respondWithError(w, http.StatusUnauthorized, "mime wrong", err)
 		return
 	}
+	defer file.Close()
+
 	fmt.Println(mimetype)
 
 	if mimetype != "image/png" && mimetype != "image/jpeg" {
